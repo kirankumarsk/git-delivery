@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect ,useMemo} from "react";
 import logo from "../../Assets/Logo/logo-r1.png";
 //import bd from "../../Assets/Icons/India.png";
 import en from "../../Assets/Icons/usa.png";
@@ -10,16 +10,21 @@ import Select, { components } from "react-select";
 const Navbar = () => {
   const { language, setLanguage } = useContext(AuthContext);
   console.log(language);
-  const countries = [
-    { value: "en", label: "English", icon: en },
-  ];
-  const [selectedLanguage, setSelectedLanguage] = useState(countries[1]);
+
+  // Use useMemo to memoize the countries array
+  const memoizedCountries = useMemo(() => {
+    return [
+      { value: "en", label: "English", icon: en },
+    ];
+  }, []); // Empty dependency array ensures memoization
+
+  const [selectedLanguage, setSelectedLanguage] = useState(memoizedCountries[0]);
+
   useEffect(() => {
     setSelectedLanguage(
-      countries.find((country) => country.value === language)
+      memoizedCountries.find((country) => country.value === language)
     );
-  }, [language]
-  );
+  }, [language,memoizedCountries]);
 
   const Option = (props) => (
     <components.Option
